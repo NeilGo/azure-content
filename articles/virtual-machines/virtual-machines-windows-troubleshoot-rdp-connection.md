@@ -136,6 +136,16 @@ Possible solutions:
 
 - If your user account is local to the VM, check if the VM name is spelled correctly.
 - If the account is on Active Directory domain, check the spelling of the domain name.
+- If the account is a Microsoft Account (LiveID, Outlook.com, Passport.net, etc.) and the VM is Windows 10 MSDN image or supports native logins with a "Microsoft account" then you may have to make the following changes:
+	- 1st: Login with a local Account account that has administrator access [ComputerName\Username as indicated  above]
+	- 2nd: Uncheck "Allow connections only from computers running Remote Desktop with Network Level Authentication (recommended)", which is typically found in the control pannel under "system properties"
+	- 3rd: Find the downloaded *.RDP file that you use to connect to the virtual machine, right-click and choose "Open with" and scroll down to find Notepad. [Make sure "Always use this app to open" is NOT checked
+	- 4th: The RDP file is now open in Notepad. Look for the line that has "prompt for credentials:i:1" and replace with #enablecredsspsupport:i:0". Save the change.
+	- 5th: Now doubleclick the modifed RDP file, and you should be able to connect to the remote desktop's actual login screen. At this point you can now type the email address of your Microsoft Account such as "testuser7717@outlook.com" and the password. The system will churn for a few minutes (2-7 depending on the size of your Azure VM).
+	- 6th: Once you are presented with the windows desktop for your Microsoft Account on the Azure VM. Perform a sign-out.
+	- 7th: Go back to the RDP file with Notepad, and reverse the change, replacing "enablecredsspsupport:i:0" with "prompt for credentials:i:1"
+	- 8th: Remote to the Azure VM with your local account that has administrator rights, go back to control pannel "system settings" and re-enable the checkbox for "Allow connections only from computers running Remote Desktop with Network Level Authentiation (recommended)".
+	- 9th: Sign out as your local administrator and relaunch Remote Desktop, and you should now be able to login with your Microsoft Account!
 - If it is an Active Directory domain account and the domain name is spelled correctly, verify that a domain controller is available in that domain. This can be a common issue in an Azure virtual network that contains domain controllers, in which a domain controller computer is not started. As a workaround, you can use a local administrator account instead of a domain account.
 
 <a id="wincred"></a>
